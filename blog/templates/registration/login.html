@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <h4>Please Login: </h4>
+ <h5>Must be super user, please check with the site admin.</h5>
+<form action="login" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary" value="Login">
+    <input type="hidden" name="next" value="{{next}}">
+</form>
+    {% endblock %}
