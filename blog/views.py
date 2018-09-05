@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_list_or_404,redirect
-from models import Post,Comment
+from django.shortcuts import render, get_object_or_404,redirect
+from blog.models import Post,Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic import (TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView)
 from django.utils import timezone
-from forms import PostForm, CommitForm
+from blog.forms import PostForm, CommitForm
 
 class AboutView(TemplateView):
     template_name = 'about.html'
@@ -45,7 +45,7 @@ class DraftPostList(LoginRequiredMixin, ListView):
 
 @login_required()
 def add_comment_post(request,pk):
-    post = get_list_or_404(Post,pk=pk)
+    post = get_object_or_404(Post,pk=pk)
     if request.method == 'POST':
         form = CommitForm(request.POST)
         if form.is_valid():
@@ -59,19 +59,19 @@ def add_comment_post(request,pk):
 
 @login_required()
 def comment_approve(request,pk):
-    comment = get_list_or_404(Comment,pk)
+    comment = get_object_or_404(Comment,pk)
     comment.approved()
     return redirect('post_detail',pk=comment.post.pk)
 
 @login_required()
 def comment_delete(request,pk):
-    comment = get_list_or_404(Comment,pk)
+    comment = get_object_or_404(Comment,pk)
     post_pk = comment.post.pk
     comment.delete()
     return redirect('post_detail',pk=post_pk)
 
 @login_required()
 def post_publish(request,pk):
-    post = get_list_or_404(Post,pk)
+    post = get_object_or_404(Post,pk=pk)
     post.publish()
     return redirect('post_detail',pk=pk)
